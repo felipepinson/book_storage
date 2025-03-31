@@ -1,0 +1,59 @@
+version: '3.7'
+
+services:
+  books_api_nginx_server:
+    container_name: "books-api-nginx-server"
+    image: nginx:1.19
+    restart: always
+    ports:
+      - 8080:80
+    volumes:
+      - "./container_config/nginx/nginx.conf:/etc/nginx/nginx.conf:delegated"
+      - "./container_config/nginx/api-conf.conf:/etc/nginx/conf.d/api-conf.conf:delegated"
+      - "./api:/var/www/app"
+    depends_on:
+      - apiapp
+    networks:
+        books-api-network:
+            ipv4_address: 172.10.1.10
+
+  apiapp:
+    container_name: "books-api"
+    build:
+      context: .
+      dockerfile: Dockerfile
+    restart: always
+    volumes:
+       - "./container_config/php_fpm/php-fpm.conf:/usr/local/etc/php-fpm.d/www.conf:delegated"
+       - "./api:/var/www/app"
+    depends_on:
+      - books_api_mysql
+    networks:
+      - books-api-network
+
+  books_api_mysql:
+    container_name: "books-api-mysql"
+    image: mysql:5.7
+    restart: always
+    volumes:
+      - "sql_vol:/var/lib/mysql"
+    networks:
+        books-api-network:
+            ipv4_address: 172.10.1.12
+    environment:
+        MYSQL_DATABASE: livros
+        MYSQL_PASSWORD: root
+        MYSQL_ROOT_PASSWORD: root
+        MYSQL_ROOT_HOST: '%'
+        TZ: 'America/Sao_Paulo'
+
+networks:
+    books-api-network:
+        driver: "bridge"
+        ipam:
+            config:
+                - subnet: "172.10.1.0/24"
+
+volumes:
+    sql_vol:
+        driver: local
