@@ -27,7 +27,8 @@ services:
        - "./container_config/php_fpm/php-fpm.conf:/usr/local/etc/php-fpm.d/www.conf:delegated"
        - "./api:/var/www/app"
     depends_on:
-      - books_api_mysql
+        books_api_mysql:
+            condition: service_healthy
     networks:
       - books-api-network
 
@@ -41,11 +42,16 @@ services:
         books-api-network:
             ipv4_address: 172.10.1.12
     environment:
-        MYSQL_DATABASE: livros
+        MYSQL_DATABASE: livraria
         MYSQL_PASSWORD: root
         MYSQL_ROOT_PASSWORD: root
         MYSQL_ROOT_HOST: '%'
         TZ: 'America/Sao_Paulo'
+    healthcheck:
+        test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-proot"]
+        interval: 10s
+        retries: 5
+        start_period: 10s
 
 networks:
     books-api-network:

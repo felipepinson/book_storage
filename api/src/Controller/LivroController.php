@@ -3,10 +3,15 @@
 namespace App\Controller;
 
 use App\Model\LivroModel;
+use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
+use Doctrine\ORM\EntityNotFoundException;
+use Doctrine\ORM\NoResultException;
+use Doctrine\DBAL\Exception as DBALException;
 use Symfony\Component\Serializer\SerializerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 
 class LivroController extends AbstractController
 {
@@ -15,25 +20,74 @@ class LivroController extends AbstractController
     ) {
     }
 
-    public function getAll(Request $request,LivroModel $model): JsonResponse
+    public function buscarLivros(Request $request,LivroModel $model): JsonResponse
     {
-        $filtros = $request->query->all();
+        try {
+            $filtros = $request->query->all();
 
-        // Recupera todos os livros
-        $livros = $model->buscarLivros($filtros);
+            $livros = $model->buscarLivros($filtros);
 
-        // Serializa os dados dos livros usando o grupo "livro:list"
-        $json = $this->serializer->serialize($livros, 'json', ['groups' => 'livro:list']);
+            $json = $this->serializer->serialize($livros, 'json', ['groups' => 'livro']);
 
-        return new JsonResponse($json, JsonResponse::HTTP_OK, [], true);  // True para informar que o conteúdo é JSON
+            return new JsonResponse($json, JsonResponse::HTTP_OK, [], true);
+        } catch (\InvalidArgumentException $e) {
+            return new JsonResponse(['error' => $e->getMessage()], JsonResponse::HTTP_BAD_REQUEST);
+
+        } catch (NoResultException $e) {
+            return new JsonResponse(['error' => 'Nenhum livro encontrado.'], JsonResponse::HTTP_NOT_FOUND);
+
+        } catch (DBALException $e) {
+            return new JsonResponse(['error' => 'Erro ao acessar o banco de dados.'], JsonResponse::HTTP_INTERNAL_SERVER_ERROR);
+
+        } catch (\Exception $e) {
+            return new JsonResponse(['error' => 'Ops... Verifiquei os parametros e tente novamente.'], JsonResponse::HTTP_INTERNAL_SERVER_ERROR);
+        }
     }
 
     public function cadastrar(Request $resquest, LivroModel $model): JsonResponse
     {
-        $livro = $model->adicionarLivroComAutor($resquest->toArray());
+        try {
+            $livro = $model->adicionarLivro($resquest->toArray());
 
-        $json = $this->serializer->serialize($livro, 'json', ['groups' => 'livro:list']);
+            $json = $this->serializer->serialize($livro, 'json', ['groups' => 'livro']);
 
-        return new JsonResponse($json, JsonResponse::HTTP_OK, [], true);  // True para informar que o conteúdo é JSON
+            return new JsonResponse($json, JsonResponse::HTTP_CREATED, [], true);
+
+        } catch (EntityNotFoundException $e) {
+            return new JsonResponse(['error' => $e->getMessage()], JsonResponse::HTTP_NOT_FOUND);
+
+        } catch (UniqueConstraintViolationException $e) {
+            return new JsonResponse(['error' => 'Esse livro já existe no sistema.'], JsonResponse::HTTP_CONFLICT);
+
+        } catch (\InvalidArgumentException $e) {
+            return new JsonResponse(['error' => $e->getMessage()], JsonResponse::HTTP_BAD_REQUEST);
+
+        } catch (\Exception $e) {
+            return new JsonResponse(['error' => $e->getMessage()], JsonResponse::HTTP_INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    public function atualizar(Request $request, LivroModel $model, int $id): JsonResponse
+    {
+        $livro = $model->atualizarLivro($id, $request->toArray());
+
+        $json = $this->serializer->serialize($livro, 'json', ['groups' => 'livro']);
+
+        return new JsonResponse($json, JsonResponse::HTTP_OK, [], true);
+    }
+
+    public function remover(LivroModel $model, int $id): JsonResponse
+    {
+        try {
+            $model->removerLivro($id);
+
+            return new JsonResponse(['message' => 'Livro removido com sucesso!'], JsonResponse::HTTP_NO_CONTENT);
+
+        } catch (EntityNotFoundException $e) {
+            return new JsonResponse(['error' => $e->getMessage()], JsonResponse::HTTP_NOT_FOUND);
+
+        } catch (\Exception $e) {
+            return new JsonResponse(['error' => 'Ops.. Temos um Erro interno no servidor. Aguarde alguns instantes e tente novamente'], JsonResponse::HTTP_INTERNAL_SERVER_ERROR);
+        }
     }
 }

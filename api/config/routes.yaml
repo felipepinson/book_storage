@@ -5,16 +5,66 @@ controllers:
     type: attribute
 
 health:
-   path: /health
+   path: /
    methods: [GET]
    defaults: { _controller: 'App\Controller\HealthCheckController::health' }
+
+buscar_livros:
+   path: /v1/livros
+   methods: [GET]
+   defaults: { _controller: 'App\Controller\LivroController::buscarLivros'}
 
 adicionar_livro:
    path: /v1/livros
    methods: [POST]
    defaults: { _controller: 'App\Controller\LivroController::cadastrar'}
 
-buscar_livros:
-   path: /v1/livros
+atualizar_livro:
+   path: /v1/livros/{id}
+   methods: [PUT]
+   defaults: { _controller: 'App\Controller\LivroController::atualizar'}
+
+remover_livro:
+   path: /v1/livros/{id}
+   methods: [DELETE]
+   defaults: { _controller: 'App\Controller\LivroController::remover'}
+
+buscar_autores:
+   path: /v1/autores
    methods: [GET]
-   defaults: { _controller: 'App\Controller\LivroController::getAll'}
+   defaults: { _controller: 'App\Controller\AutorController::buscarAutores'}
+
+adicionar_autore:
+   path: /v1/autores
+   methods: [POST]
+   defaults: { _controller: 'App\Controller\AutorController::cadastrar'}
+
+atualizar_autore:
+   path: /v1/autores/{id}
+   methods: [PUT]
+   defaults: { _controller: 'App\Controller\AutorController::atualizar'}
+
+deletar_autore:
+   path: /v1/autores/{id}
+   methods: [DELETE]
+   defaults: { _controller: 'App\Controller\AutorController::remover'}
+
+buscar_assuntos:
+   path: /v1/assuntos
+   methods: [GET]
+   defaults: { _controller: 'App\Controller\AssuntoController::buscarAssuntos'}
+
+adicionar_assunto:
+   path: /v1/assuntos
+   methods: [POST]
+   defaults: { _controller: 'App\Controller\AssuntoController::cadastrar'}
+
+atualizar_assunto:
+   path: /v1/assuntos/{id}
+   methods: [PUT]
+   defaults: { _controller: 'App\Controller\AssuntoController::atualizar'}
+
+deletar_assunto:
+   path: /v1/assuntos/{id}
+   methods: [DELETE]
+   defaults: { _controller: 'App\Controller\AssuntoController::remover'}

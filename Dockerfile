@@ -16,6 +16,4 @@ WORKDIR /var/www/app
 
 COPY ./api .
 
-EXPOSE 8000
-
-CMD ["php-fpm"]
+CMD /var/www/app/bin/entrypoint.sh

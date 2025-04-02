@@ -3,65 +3,146 @@
 namespace App\Tests\Functional;
 
 use App\Entity\Livro;
-use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Bundle\FrameworkBundle\KernelBrowser;
-use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\HttpFoundation\Response;
 
-class LivroControllerTest extends WebTestCase
+class LivroControllerTest extends AbstractWebTestCase
 {
-    protected KernelBrowser $client;
-    protected EntityManagerInterface $em;
-
-    protected function setUp(): void
-    {
-        $this->client = $this->createClient();
-
-        $this->em = $this->client->getContainer()
-            ->get('doctrine')
-            ->getManager();
-    }
-
     public function testGetAllLivrosComAutores(): void
     {
-        $this->client ->request('GET', '/v1/livros');
+        $this->sendRequest('GET', '/v1/livros');
 
         $this->assertResponseStatusCodeSame(Response::HTTP_OK);
 
-        $responseContent = json_decode($this->client ->getResponse()->getContent(), true);
-
-        $this->assertNotEmpty($responseContent);
-        $this->assertSame(10, count($responseContent));
+        $this->assertNotEmpty($this->getResponse());
+        $this->assertSame(10, count($this->getJsonResponse()));
     }
 
-    public function testCadastrarNovoLivroComAutorEAssunto(): void
+    public function testCadastrarNovoLivroComAutoresEAssunto(): void
     {
-        $novoLivro = json_encode([
+        $novoLivro = [
             'titulo' => 'Harry Potter',
             'editora' => 'Rocco',
             'edicao' => 1,
             'anoPublicacao' => '1997',
-            'autor' => [
-                'nome' => 'J.K. Rowling',
+            'autores' => [
+                [
+                    'nome' => 'J.K. Rowling',
+                ],
+                [
+                    'nome' => 'J.K. Rowling 2',
+                ]
             ],
-            'assunto' => [
-                'descricao' => 'Fantasia'
+            'assuntos' => [
+                [
+                    'descricao' => 'Fantasia',
+                ],
             ],
-        ]);
+        ];
 
-        $this->client ->request('POST', '/v1/livros', [],[],[], $novoLivro);
+        $this->sendRequest('POST', '/v1/livros', $novoLivro);
+
+        $this->assertResponseStatusCodeSame(Response::HTTP_CREATED);
+
+        $responseContent = $this->getJsonResponse();
+
+        $livroSalvo = $this->em->getRepository(Livro::class)->findOneById($responseContent->id);
+
+        $this->assertEquals($livroSalvo->getTitulo(), 'Harry Potter');
+        $this->assertEquals($livroSalvo->getEditora(), 'Rocco');
+        $this->assertEquals($livroSalvo->getEdicao(), 1);
+        $this->assertEquals($livroSalvo->getAnoPublicacao(), '1997');
+        $this->assertCount(2, $livroSalvo->getAutores()->toArray());
+        $this->assertEquals($livroSalvo->getAutores()->first()->getNome(), 'J.K. Rowling');
+        $this->assertEquals($livroSalvo->getAssuntos()->first()->getDescricao(), 'Fantasia');
+    }
+
+    public function testAlterarLivro(): void
+    {
+        $dados = [
+            'titulo' => 'Harry Potter teste',
+            'editora' => 'Rocco 2',
+            'edicao' => 2,
+            'anoPublicacao' => '1998',
+        ];
+
+        $livro = $this->em->getRepository(Livro::class)->findOneBy(['titulo' => 'Livro 1']);
+        $codl = $livro->getId();
+
+        $this->assertSame('Livro 1', $livro->getTitulo());
+        $this->assertSame('Editora A', $livro->getEditora());
+        $this->assertSame(1, $livro->getEdicao());
+        $this->assertSame('2001', $livro->getAnoPublicacao());
+
+        $this->sendRequest('PUT',  sprintf('/v1/livros/%s', $codl), $dados);
 
         $this->assertResponseStatusCodeSame(Response::HTTP_OK);
 
-        $responseContent = json_decode($this->client ->getResponse()->getContent(), true);
+        $livroAtualizado = $this->em->getRepository(Livro::class)->findOneById($codl);
 
-        $livroSalvo = $this->em->getRepository(Livro::class)->findOneById($responseContent['id']);
+        $this->assertSame($dados['titulo'], $livroAtualizado->getTitulo());
+        $this->assertSame($dados['editora'], $livroAtualizado->getEditora());
+        $this->assertSame($dados['edicao'], $livroAtualizado->getEdicao());
+        $this->assertSame($dados['anoPublicacao'], $livroAtualizado->getAnoPublicacao());
+    }
 
-        $this->assertStringContainsString($livroSalvo->getTitulo(), 'Harry Potter');
-        $this->assertStringContainsString($livroSalvo->getEditora(), 'Rocco');
-        $this->assertStringContainsString($livroSalvo->getEdicao(), 1);
-        $this->assertStringContainsString($livroSalvo->getAnoPublicacao(), '1997');
-        $this->assertStringContainsString($livroSalvo->getAutores()->first()->getNome(), 'J.K. Rowling');
-        $this->assertStringContainsString($livroSalvo->getAssuntos()->first()->getDescricao(), 'Fantasia');
+    public function testAlterarAutoresLivro(): void
+    {
+        $dados = [
+            'autores' => [
+                ['nome' => 'C.S. Lewis']
+            ],
+        ];
+
+        $livro = $this->em->getRepository(Livro::class)->findOneBy(['titulo' => 'Livro 1']);
+        $codl = $livro->getId();
+
+        $this->assertSame('Livro 1', $livro->getTitulo());
+        $this->assertSame('Editora A', $livro->getEditora());
+        $this->assertSame(1, $livro->getEdicao());
+        $this->assertSame('2001', $livro->getAnoPublicacao());
+
+        $this->sendRequest('PUT',  sprintf('/v1/livros/%s', $codl), $dados);
+
+        $this->assertResponseStatusCodeSame(Response::HTTP_OK);
+
+        $livroAtualizado = $this->em->getRepository(Livro::class)->findOneById($codl);
+
+        $this->assertEquals($livroAtualizado->getAutores()->first()->getNome(), 'C.S. Lewis');
+    }
+
+    public function testAlterarAssuntosLivro(): void
+    {
+        $dados = [
+            'assuntos' => [
+                ['descricao' => 'Fantasia'],
+                ['descricao' => 'Infantil'],
+            ],
+        ];
+
+        $livro = $this->em->getRepository(Livro::class)->findOneBy(['titulo' => 'Livro 1']);
+        $codl = $livro->getId();
+
+        $this->sendRequest('PUT',  sprintf('/v1/livros/%s', $codl), $dados);
+
+        $this->assertResponseStatusCodeSame(Response::HTTP_OK);
+
+        $assuntoAtualizado = $this->em->getRepository(Livro::class)->findOneById($codl);
+
+        $this->assertEquals($assuntoAtualizado->getAssuntos()->first()->getDescricao(), 'Fantasia');
+        $this->assertEquals($assuntoAtualizado->getAssuntos()->next()->getDescricao(), 'Infantil');
+    }
+
+    public function testRemoverLivro(): void
+    {
+        $livro = $this->em->getRepository(Livro::class)->findOneBy(['titulo' => 'Livro 1']);
+        $codl = $livro->getId();
+
+        $this->sendRequest('DELETE',  sprintf('/v1/livros/%s', $codl));
+
+        $this->assertResponseStatusCodeSame(Response::HTTP_NO_CONTENT);
+
+        $livroRemovido = $this->em->getRepository(Livro::class)->findOneById($codl);
+
+        $this->assertNull($livroRemovido);
     }
 }

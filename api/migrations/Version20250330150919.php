@@ -21,10 +21,10 @@ final class Version20250330150919 extends AbstractMigration
     {
         // this up() migration is auto-generated, please modify it to your needs
         $this->addSql(<<<'SQL'
-            CREATE TABLE assunto (codAs INT AUTO_INCREMENT NOT NULL, descricao VARCHAR(20) NOT NULL, PRIMARY KEY(codAs)) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB
+            CREATE TABLE assunto (codAs INT AUTO_INCREMENT NOT NULL, descricao VARCHAR(20) NOT NULL, UNIQUE INDEX UNIQ_B9F0BE022B85EB (descricao), PRIMARY KEY(codAs)) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB
         SQL);
         $this->addSql(<<<'SQL'
-            CREATE TABLE autor (codAu INT AUTO_INCREMENT NOT NULL, nome VARCHAR(40) NOT NULL, PRIMARY KEY(codAu)) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB
+            CREATE TABLE autor (codAu INT AUTO_INCREMENT NOT NULL, nome VARCHAR(40) NOT NULL, UNIQUE INDEX UNIQ_31075EBA54BD530C (nome), PRIMARY KEY(codAu)) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB
         SQL);
         $this->addSql(<<<'SQL'
             CREATE TABLE livro (codl INT AUTO_INCREMENT NOT NULL, titulo VARCHAR(40) NOT NULL, editora VARCHAR(40) NOT NULL, edicao INT NOT NULL, ano_publicacao VARCHAR(4) NOT NULL, PRIMARY KEY(codl)) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB

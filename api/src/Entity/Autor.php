@@ -14,10 +14,11 @@ class Autor extends AbstractEntity
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(name: "codAu")]
+    #[Groups(["autor"])]
     private ?int $id = null;
 
-    #[ORM\Column(length: 40)]
-    #[Groups(["livro:list"])]
+    #[ORM\Column(length: 40, unique: true)]
+    #[Groups(["livro", "autor"])]
     private ?string $nome = null;
 
     /**

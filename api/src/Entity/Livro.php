@@ -8,30 +8,29 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
 
-
 #[ORM\Entity(repositoryClass: LivroRepository::class)]
 class Livro extends AbstractEntity
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(name: "codl")]
-    #[Groups(["livro:list", "livro:detail"])]
+    #[Groups(["livro"])]
     private ?int $id = null;
 
     #[ORM\Column(length: 40)]
-    #[Groups(["livro:list", "livro:detail"])]
+    #[Groups(["livro"])]
     private ?string $titulo = null;
 
     #[ORM\Column(length: 40)]
-    #[Groups(["livro:list", "livro:detail"])]
+    #[Groups(["livro"])]
     private ?string $editora = null;
 
     #[ORM\Column]
-    #[Groups(["livro:list", "livro:detail"])]
+    #[Groups(["livro"])]
     private ?int $edicao = null;
 
     #[ORM\Column(length: 4)]
-    #[Groups(["livro:list", "livro:detail"])]
+    #[Groups(["livro"])]
     private ?string $anoPublicacao = null;
 
     /**
@@ -41,7 +40,7 @@ class Livro extends AbstractEntity
     #[ORM\JoinTable(name: "livro_autor")]
     #[ORM\JoinColumn(name: "livro_codl", referencedColumnName: "codl")]
     #[ORM\InverseJoinColumn(name: "autor_codAu", referencedColumnName: "codAu")]
-    #[Groups(["livro:list", "livro:detail"])]
+    #[Groups(["livro"])]
     private Collection $autores;
 
     /**
@@ -51,7 +50,7 @@ class Livro extends AbstractEntity
     #[ORM\JoinTable(name: "livro_assunto")]
     #[ORM\JoinColumn(name: "livro_codl", referencedColumnName: "codl")]
     #[ORM\InverseJoinColumn(name: "assunto_codAs", referencedColumnName: "codAs")]
-    #[Groups(["livro:list", "livro:detail"])]
+    #[Groups(["livro"])]
     private Collection $assuntos;
 
     public function __construct()
@@ -121,11 +120,24 @@ class Livro extends AbstractEntity
         return $this->autores;
     }
 
-    public function addAutor(Autor $autor): static
+    public function setAutores(array $autores): static
     {
-        if (!$this->autores->contains($autor)) {
-            $this->autores->add($autor);
+        foreach ($autores as $autor) {
+            $this->addAutor($autor);
         }
+
+        return $this;
+    }
+
+    public function addAutor(Autor $novoAutor): static
+    {
+        foreach ($this->autores as $autor) {
+            if (!empty($autor) && $autor->getNome() === $novoAutor->getNome()) {
+                return $this;
+            }
+        }
+
+        $this->autores->add($novoAutor);
 
         return $this;
     }
@@ -145,11 +157,24 @@ class Livro extends AbstractEntity
         return $this->assuntos;
     }
 
-    public function addAssunto(Assunto $assunto): static
+    public function setAssuntos(array $assuntos): static
     {
-        if (!$this->assuntos->contains($assunto)) {
-            $this->assuntos->add($assunto);
+        foreach ($assuntos as $assunto) {
+            $this->addAssunto($assunto);
         }
+
+        return $this;
+    }
+
+    public function addAssunto(Assunto $novoAssunto): static
+    {
+        foreach ($this->assuntos as $assunto) {
+            if (!empty($assunto) && $assunto->getDescricao() === $novoAssunto->getDescricao()) {
+                return $this;
+            }
+        }
+
+        $this->assuntos->add($novoAssunto);
 
         return $this;
     }

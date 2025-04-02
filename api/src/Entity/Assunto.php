@@ -6,6 +6,7 @@ use App\Repository\AssuntoRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: AssuntoRepository::class)]
 class Assunto extends AbstractEntity
@@ -13,9 +14,11 @@ class Assunto extends AbstractEntity
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(name: "codAs")]
+    #[Groups(["assunto"])]
     private ?int $id = null;
 
-    #[ORM\Column(length: 20)]
+    #[ORM\Column(length: 20, unique: true)]
+    #[Groups(["assunto", "livro"])]
     private ?string $descricao = null;
 
     /**
