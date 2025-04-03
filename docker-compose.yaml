@@ -1,6 +1,21 @@
 version: '3.7'
 
 services:
+  apiapp:
+    container_name: "books-api"
+    build:
+      context: .
+      dockerfile: Dockerfile.api
+    restart: always
+    volumes:
+       - "./backend/container_config/php_fpm/php-fpm.conf:/usr/local/etc/php-fpm.d/www.conf:delegated"
+       - "./backend/api:/var/www/app"
+    depends_on:
+        books_api_mysql:
+            condition: service_healthy
+    networks:
+      - books-api-network
+
   books_api_nginx_server:
     container_name: "books-api-nginx-server"
     image: nginx:1.19
@@ -8,29 +23,14 @@ services:
     ports:
       - 8080:80
     volumes:
-      - "./container_config/nginx/nginx.conf:/etc/nginx/nginx.conf:delegated"
-      - "./container_config/nginx/api-conf.conf:/etc/nginx/conf.d/api-conf.conf:delegated"
-      - "./api:/var/www/app"
+      - "./backend/container_config/nginx/nginx.conf:/etc/nginx/nginx.conf:delegated"
+      - "./backend/container_config/nginx/api-conf.conf:/etc/nginx/conf.d/api-conf.conf:delegated"
+      - "./backend/api:/var/www/app"
     depends_on:
       - apiapp
     networks:
         books-api-network:
             ipv4_address: 172.10.1.10
-
-  apiapp:
-    container_name: "books-api"
-    build:
-      context: .
-      dockerfile: Dockerfile
-    restart: always
-    volumes:
-       - "./container_config/php_fpm/php-fpm.conf:/usr/local/etc/php-fpm.d/www.conf:delegated"
-       - "./api:/var/www/app"
-    depends_on:
-        books_api_mysql:
-            condition: service_healthy
-    networks:
-      - books-api-network
 
   books_api_mysql:
     container_name: "books-api-mysql"
@@ -53,13 +53,30 @@ services:
         retries: 5
         start_period: 10s
 
+  frontend:
+    container_name: "app-react-frontend"
+    build:
+      context: .
+      dockerfile: Dockerfile.app
+    ports:
+      - "3000:5173"
+    volumes:
+      - ./frontend:/app
+    environment:
+      - NODE_ENV=development
+      - CHOKIDAR_USEPOLLING=true
+    networks:
+        books-api-network:
+            ipv4_address: 172.10.1.13
+    depends_on:
+      - apiapp
+
 networks:
     books-api-network:
         driver: "bridge"
         ipam:
             config:
                 - subnet: "172.10.1.0/24"
-
 volumes:
     sql_vol:
         driver: local

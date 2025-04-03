@@ -1,0 +1,11 @@
+.livro-card {
+  width: 200px; /* Ajuste conforme necessário */
+  height: 300px; /* Altura maior para parecer um livro */
+  border-radius: 8px; /* Bordas arredondadas */
+  padding: 10px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  background: linear-gradient(135deg, #f8f9fa 20%, #e9ecef 100%); /* Efeito de textura */
+}
