@@ -24,6 +24,7 @@ class LivroControllerTest extends AbstractWebTestCase
             'editora' => 'Rocco',
             'edicao' => 1,
             'anoPublicacao' => '1997',
+            'preco' => 20.00,
             'autores' => [
                 [
                     'nome' => 'J.K. Rowling',
@@ -62,6 +63,7 @@ class LivroControllerTest extends AbstractWebTestCase
             'titulo' => 'Harry Potter teste',
             'editora' => 'Rocco 2',
             'edicao' => 2,
+            'preco' => 20.00,
             'anoPublicacao' => '1998',
         ];
 
@@ -83,6 +85,7 @@ class LivroControllerTest extends AbstractWebTestCase
         $this->assertSame($dados['editora'], $livroAtualizado->getEditora());
         $this->assertSame($dados['edicao'], $livroAtualizado->getEdicao());
         $this->assertSame($dados['anoPublicacao'], $livroAtualizado->getAnoPublicacao());
+        $this->assertSame($dados['preco'], $livroAtualizado->getPreco());
     }
 
     public function testAlterarAutoresLivro(): void

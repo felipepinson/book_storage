@@ -69,6 +69,7 @@ const AutorCadastro = ({ esconderTituloSeModal = true }) => {
                     <label className="form-label">Nome do Autor</label>
                     <input
                         type="text"
+                        maxLength={40}
                         className="form-control"
                         value={nome}
                         onChange={(e) => setNome(e.target.value)}

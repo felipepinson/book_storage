@@ -4,6 +4,7 @@ namespace App\Model;
 
 use App\Entity\AbstractEntity;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\Validator\Exception\ValidationFailedException;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 abstract class AbstractModel
@@ -35,20 +36,12 @@ abstract class AbstractModel
         $this->flush();
     }
 
-    public function validatorErrors(AbstractEntity $obj): ?array
+    public function validatorErrors(AbstractEntity $obj): void
     {
         $erros = $this->validator->validate($obj);
 
         if (count($erros) > 0) {
-            $errosFormatados = [];
-
-            foreach ($erros as $erro) {
-                $errosFormatados[$erro->getPropertyPath()][] = $erro->getMessage();
-            }
-
-            return $errosFormatados;
+            throw new ValidationFailedException($obj, $erros);
         }
-
-        return null;
     }
 }

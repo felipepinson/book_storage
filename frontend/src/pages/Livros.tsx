@@ -13,6 +13,21 @@ const Livros = () => {
     const [showModalNovoAutor, setShowModalNovoAutor] = useState(false);
     const [showModalNovoAssunto, setShowModalNovoAssunto] = useState(false);
 
+    const formatarPreco = (valor) => {
+        if (!valor) return '';
+
+        let numero = typeof valor === 'string'
+          ? parseFloat(valor.replace(',', '.'))
+          : parseFloat(valor);
+
+        if (isNaN(numero)) return '';
+
+        return numero.toLocaleString('pt-BR', {
+          style: 'currency',
+          currency: 'BRL',
+        });
+    };
+
     const carregarLivros = async () => {
         try {
             const data = await api.get('/livros');
@@ -64,6 +79,7 @@ const Livros = () => {
                         <div className="card livro-card shadow-sm">
                             <div className="card-body">
                                 <h5 className="card-title">{livro.titulo}</h5>
+                                <h4>{formatarPreco(livro.preco)}</h4>
                                 <p className="card-text">
                                     <strong>Autores:</strong><br />
                                     <span className="fst-italic">{livro.autores.map(autor => autor.nome).join(', ')}</span>

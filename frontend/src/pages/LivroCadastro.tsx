@@ -7,6 +7,7 @@ const LivroCadastro: React.FC = ({ onLivroSalvo, livroSelecionado, esconderTitul
         titulo: "",
         editora: "",
         edicao: "",
+        preco: null,
         anoPublicacao: "",
         autores: [],
         assuntos: []
@@ -46,6 +47,7 @@ const LivroCadastro: React.FC = ({ onLivroSalvo, livroSelecionado, esconderTitul
                     editora: "",
                     edicao: "",
                     anoPublicacao: "",
+                    preco: null,
                     autores: [],
                     assuntos: []
                 });
@@ -53,6 +55,27 @@ const LivroCadastro: React.FC = ({ onLivroSalvo, livroSelecionado, esconderTitul
 
         carregarDados();
     }, [livroSelecionado]);
+
+    const formatarPreco = (valor) => {
+        if (!valor) return '';
+
+        let numero = typeof valor === 'string'
+          ? parseFloat(valor.replace(',', '.'))
+          : parseFloat(valor);
+
+        if (isNaN(numero)) return '';
+
+        return numero.toLocaleString('pt-BR', {
+          style: 'currency',
+          currency: 'BRL',
+        });
+    };
+
+      const handleChangePreco = (e) => {
+        const rawValue = e.target.value.replace(/\D/g, '');
+        const preco = (parseFloat(rawValue) / 100).toFixed(2);
+        setLivro({ ...livro, preco });
+      };
 
     const handleChange = (e) => {
         setLivro({ ...livro, [e.target.name]: e.target.value });
@@ -105,6 +128,7 @@ const LivroCadastro: React.FC = ({ onLivroSalvo, livroSelecionado, esconderTitul
                     titulo: "",
                     editora: "",
                     edicao: "",
+                    preco: null,
                     anoPublicacao: "",
                     autores: [],
                     assuntos: []
@@ -124,12 +148,24 @@ const LivroCadastro: React.FC = ({ onLivroSalvo, livroSelecionado, esconderTitul
             {mensagem && <div className="alert alert-info">{mensagem}</div>}
             <form onSubmit={handleSubmit}>
                 <div className="mb-3">
+                    <label className="form-label">Preço</label>
+                    <input
+                        type="text"
+                        className="form-control"
+                        name="preco"
+                        value={formatarPreco(livro.preco)}
+                        onChange={handleChangePreco}
+                        placeholder="R$ 0,00"
+                        required
+                    />
+                </div>
+                <div className="mb-3">
                     <label className="form-label">Título</label>
-                    <input type="text" className="form-control" name="titulo" value={livro.titulo} onChange={handleChange} required />
+                    <input type="text" maxLength={40} className="form-control" name="titulo" value={livro.titulo} onChange={handleChange} required />
                 </div>
                 <div className="mb-3">
                     <label className="form-label">Editora</label>
-                    <input type="text" className="form-control"name="editora" value={livro.editora} onChange={handleChange} required />
+                    <input type="text"  maxLength={40} className="form-control"name="editora" value={livro.editora} onChange={handleChange} required />
                 </div>
                 <div className="mb-3">
                     <label className="form-label">Edição</label>
@@ -137,7 +173,14 @@ const LivroCadastro: React.FC = ({ onLivroSalvo, livroSelecionado, esconderTitul
                 </div>
                 <div className="mb-3">
                     <label className="form-label">Ano de Publicação</label>
-                    <input type="text" size={4} className="form-control" name="anoPublicacao" value={livro.anoPublicacao} onChange={handleChange} required />
+                    <input type="text" maxLength={4} className="form-control" name="anoPublicacao" value={livro.anoPublicacao} 
+                    onChange={(e) => {
+                        const valor = e.target.value.replace(/\D/, ''); // Remove caracteres não numéricos
+                        if (valor.length <= 4) {
+                            handleChange(e);
+                        }
+                    }}
+                    required />
                 </div>
                 {/* Seleção de Autores */}
                 <div className="mb-3">
@@ -151,9 +194,21 @@ const LivroCadastro: React.FC = ({ onLivroSalvo, livroSelecionado, esconderTitul
                         </select>
                         <button type="button" className="btn btn-secondary" onClick={adicionarAutor}>Adicionar</button>
                     </div>
-                    <ul className="mt-2">
+                    <ul className="list-group mt-2">
                         {livro.autores.map((autor) => (
-                            <li key={autor.id}>{autor.nome} <button type="button" className="btn btn-sm btn-danger ms-2" onClick={() => removerAutor(autor.nome)}>Remover</button></li>
+                            <li
+                                key={autor.id}
+                                className="list-group-item d-flex justify-content-between align-items-center"
+                            >
+                                {autor.nome}
+                                <button
+                                    type="button"
+                                    className="btn btn-sm btn-outline-danger"
+                                    onClick={() => removerAutor(autor.nome)}
+                                >
+                                    Remover
+                                </button>
+                            </li>
                         ))}
                     </ul>
                 </div>
@@ -170,9 +225,21 @@ const LivroCadastro: React.FC = ({ onLivroSalvo, livroSelecionado, esconderTitul
                         </select>
                         <button type="button" className="btn btn-secondary" onClick={adicionarAssunto}>Adicionar</button>
                     </div>
-                    <ul className="mt-2">
+                    <ul className="list-group mt-2">
                         {livro.assuntos.map((assunto) => (
-                            <li key={assunto.id}>{assunto.descricao} <button type="button" className="btn btn-sm btn-danger ms-2" onClick={() => removerAssunto(assunto.descricao)}>Remover</button></li>
+                            <li
+                                key={assunto.id}
+                                className="list-group-item d-flex justify-content-between align-items-center"
+                            >
+                                {assunto.descricao}
+                                <button
+                                    type="button"
+                                    className="btn btn-sm btn-outline-danger"
+                                    onClick={() => removerAssunto(assunto.descricao)}
+                                >
+                                    Remover
+                                </button>
+                            </li>
                         ))}
                     </ul>
                 </div>

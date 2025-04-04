@@ -68,3 +68,8 @@ deletar_assunto:
    path: /v1/assuntos/{id}
    methods: [DELETE]
    defaults: { _controller: 'App\Controller\AssuntoController::remover'}
+
+view_relatorio:
+   path: /v1/relatorios/livros-por-autor
+   methods: [GET]
+   defaults: { _controller: 'App\Controller\RelatorioController::index'}

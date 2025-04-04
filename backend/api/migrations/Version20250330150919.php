@@ -27,7 +27,7 @@ final class Version20250330150919 extends AbstractMigration
             CREATE TABLE autor (codAu INT AUTO_INCREMENT NOT NULL, nome VARCHAR(40) NOT NULL, UNIQUE INDEX UNIQ_31075EBA54BD530C (nome), PRIMARY KEY(codAu)) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB
         SQL);
         $this->addSql(<<<'SQL'
-            CREATE TABLE livro (codl INT AUTO_INCREMENT NOT NULL, titulo VARCHAR(40) NOT NULL, editora VARCHAR(40) NOT NULL, edicao INT NOT NULL, ano_publicacao VARCHAR(4) NOT NULL, PRIMARY KEY(codl)) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB
+            CREATE TABLE livro (codl INT AUTO_INCREMENT NOT NULL, titulo VARCHAR(40) NOT NULL, editora VARCHAR(40) NOT NULL, edicao INT NOT NULL, ano_publicacao VARCHAR(4) NOT NULL, preco NUMERIC(15, 2) NOT NULL, PRIMARY KEY(codl)) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB
         SQL);
         $this->addSql(<<<'SQL'
             CREATE TABLE livro_autor (livro_codl INT NOT NULL, autor_codAu INT NOT NULL, INDEX Livro_Autor_FKIndex1 (livro_codl), INDEX Livro_Autor_FKIndex2 (autor_codAu), PRIMARY KEY(livro_codl, autor_codAu)) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB

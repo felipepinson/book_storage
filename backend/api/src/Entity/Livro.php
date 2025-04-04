@@ -53,6 +53,10 @@ class Livro extends AbstractEntity
     #[Groups(["livro"])]
     private Collection $assuntos;
 
+    #[ORM\Column(type: 'decimal', precision: 15, scale: 2)]
+    #[Groups(["livro"])]
+    private ?string $preco = null;
+
     public function __construct()
     {
         $this->autores = new ArrayCollection();
@@ -182,6 +186,18 @@ class Livro extends AbstractEntity
     public function removeAssunto(Assunto $assunto): static
     {
         $this->assuntos->removeElement($assunto);
+
+        return $this;
+    }
+
+    public function getPreco(): ?float
+    {
+        return $this->preco;
+    }
+
+    public function setPreco(float $preco): static
+    {
+        $this->preco = $preco;
 
         return $this;
     }

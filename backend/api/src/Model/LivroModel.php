@@ -29,10 +29,11 @@ class LivroModel extends AbstractModel
     {
         $livro = new Livro();
 
-        $livro->setTitulo($infoLivro['titulo']);
-        $livro->setEditora($infoLivro['editora']);
-        $livro->setEdicao($infoLivro['edicao']);
-        $livro->setAnoPublicacao($infoLivro['anoPublicacao']);
+        $livro->setTitulo($infoLivro['titulo'] ?? '');
+        $livro->setEditora($infoLivro['editora'] ?? '');
+        $livro->setEdicao($infoLivro['edicao'] ?? '');
+        $livro->setAnoPublicacao($infoLivro['anoPublicacao'] ?? '');
+        $livro->setPreco($infoLivro['preco'] ?? '');
 
         foreach ($infoLivro['autores'] as $autor) {
             $autoExistente = current($this->autorModel->buscarAutores(['nome' => $autor['nome']]));

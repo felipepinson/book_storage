@@ -18,6 +18,7 @@ class LivroFixture extends Fixture
             $livro->setEditora($infoLivro['editora']);
             $livro->setEdicao($infoLivro['edicao']);
             $livro->setAnoPublicacao($infoLivro['anoPublicacao']);
+            $livro->setPreco($infoLivro['preco']);
 
             $autor = new Autor();
             $autor->setNome($infoLivro['autor']['nome']);
@@ -44,6 +45,7 @@ class LivroFixture extends Fixture
                 'editora' => 'Martins Fontes',
                 'edicao' => 1,
                 'anoPublicacao' => '1605',
+                'preco' => 19.90,
                 'autor' => [
                     'nome' => 'Miguel de Machado'
                 ],
@@ -56,6 +58,7 @@ class LivroFixture extends Fixture
                 'editora' => 'HarperCollins Brasil',
                 'edicao' => 1,
                 'anoPublicacao' => '1954',
+                'preco' => 39.90,
                 'autor' => [
                     'nome' => 'J.R.R. Tolkien II'
                 ],
@@ -68,6 +71,7 @@ class LivroFixture extends Fixture
                 'editora' => 'Companhia das Letras',
                 'edicao' => 1,
                 'anoPublicacao' => '1949',
+                'preco' => 29.90,
                 'autor' => [
                     'nome' => 'George Orwell II'
                 ],
@@ -80,6 +84,7 @@ class LivroFixture extends Fixture
                 'editora' => 'Globo',
                 'edicao' => 1,
                 'anoPublicacao' => '1925',
+                'preco' => 19.90,
                 'autor' => [
                     'nome' => 'Franz Kafka'
                 ],
@@ -92,6 +97,7 @@ class LivroFixture extends Fixture
                 'editora' => 'Companhia das Letras',
                 'edicao' => 1,
                 'anoPublicacao' => '1945',
+                'preco' => 29.90,
                 'autor' => [
                     'nome' => 'George Orwell'
                 ],
@@ -104,6 +110,7 @@ class LivroFixture extends Fixture
                 'editora' => 'HarperCollins Brasil',
                 'edicao' => 1,
                 'anoPublicacao' => '1950',
+                'preco' => 29.90,
                 'autor' => [
                     'nome' => 'C.S. Lucas'
                 ],
@@ -116,6 +123,7 @@ class LivroFixture extends Fixture
                 'editora' => 'HarperCollins Brasil',
                 'edicao' => 1,
                 'anoPublicacao' => '1937',
+                'preco' => 29.90,
                 'autor' => [
                     'nome' => 'J.R.R. Andrew'
                 ],
@@ -128,6 +136,7 @@ class LivroFixture extends Fixture
                 'editora' => 'Globo',
                 'edicao' => 1,
                 'anoPublicacao' => '2002',
+                'preco' => 29.90,
                 'autor' => [
                     'nome' => 'Patrick Rothfuss'
                 ],
@@ -140,6 +149,7 @@ class LivroFixture extends Fixture
                 'editora' => 'Globo',
                 'edicao' => 1,
                 'anoPublicacao' => '1986',
+                'preco' => 29.90,
                 'autor' => [
                     'nome' => 'Margaret Atwood'
                 ],
@@ -151,6 +161,7 @@ class LivroFixture extends Fixture
                 'titulo' => 'A Guerra dos Mundos',
                 'editora' => 'Companhia das Letras',
                 'edicao' => 1,
+                'preco' => 29.90,
                 'anoPublicacao' => '1898',
                 'autor' => [
                     'nome' => 'H.G. Wells II'

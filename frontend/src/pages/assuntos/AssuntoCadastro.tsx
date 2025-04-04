@@ -65,6 +65,7 @@ const AssuntoCadastro = ({ esconderTituloSeModal = true }) => {
                     <label className="form-label">Descrição</label>
                     <input
                         type="text"
+                        maxLength={20}
                         className="form-control"
                         value={descricao}
                         onChange={(e) => setDescricao(e.target.value)}
