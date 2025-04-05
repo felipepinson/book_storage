@@ -53,3 +53,4 @@ const api = {
 };
 
 export default api;
+export { BASE_URL };

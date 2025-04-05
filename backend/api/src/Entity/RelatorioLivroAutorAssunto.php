@@ -13,6 +13,7 @@ class RelatorioLivroAutorAssunto
     #[ORM\Column(type: 'integer', name: "livro_id")]
     private string $livroId;
 
+    #[ORM\Id]
     #[ORM\Column(type: 'integer', name: "autor_id")]
     private int $autorId;
 
@@ -34,6 +35,9 @@ class RelatorioLivroAutorAssunto
     #[ORM\Column(type: 'string')]
     private string $assuntos;
 
+    #[ORM\Column(type: 'string')]
+    private string $preco;
+
     public function getAutorId(): int { return $this->autorId; }
     public function getNomeAutor(): string { return $this->nomeAutor; }
     public function getLivroId(): string { return $this->livroId; }
@@ -42,4 +46,5 @@ class RelatorioLivroAutorAssunto
     public function getEdicao(): string { return $this->edicao; }
     public function getAnoPublicacao(): string { return $this->anoPublicacao; }
     public function getAssuntos(): string { return $this->assuntos; }
+    public function getPreco(): string { return $this->preco; }
 }

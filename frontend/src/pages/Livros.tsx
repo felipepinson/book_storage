@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import api from '../services/api';
+import api, { BASE_URL } from '../services/api';
 import { Modal, Button } from "react-bootstrap";
 import LivroCadastro from "./LivroCadastro";
 import AutorCadastro from "./autores/AutorCadastro";
@@ -71,6 +71,14 @@ const Livros = () => {
                     <Button className="mb-4 mx-2" variant="success" onClick={() => handleShowModalLivro(null)}>
                         + Novo Livro
                     </Button>
+                    <a
+                    href={`${BASE_URL}/relatorios/livros-por-autor`}
+                    className="btn btn-secondary mb-4 mx-2"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    >
+                        Exportar
+                    </a>
                 </div>
             </div>
             <div className="row justify-content-center">
