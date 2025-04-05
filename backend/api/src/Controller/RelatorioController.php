@@ -38,7 +38,7 @@ class RelatorioController extends AbstractController
 
         // 2. Renderizar o HTML com Twig
         $html = $this->renderView('relatorio/livro-por-autor.twig', [
-            'titulo' => 'Relatório de Livros',
+            'titulo' => 'Relatório de Livros por Autor',
             'data' => date('d/m/Y H:i'),
             'lista' => $agrupadoPorAutor
         ]);

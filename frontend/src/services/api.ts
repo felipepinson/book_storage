@@ -1,4 +1,4 @@
-const BASE_URL = 'http://172.10.1.10/v1';
+const BASE_URL = 'http://localhost:8080/v1';
 
 const api = {
     async request(endpoint, method = 'GET', body = null, headers = {}) {

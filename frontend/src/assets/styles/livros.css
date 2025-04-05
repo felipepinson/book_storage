@@ -1,42 +1,51 @@
 .livro-card {
-  width: 100em;       /* Largura fixa */
-  height: 350px;      /* Altura fixa */
-  overflow: hidden;   /* Oculta qualquer conteúdo que ultrapassar */
+  width: 300px;             /* Largura fixa */
+  height: 400px;            /* Altura fixa */
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+  overflow: hidden;
+  margin: 0 auto;           /* Centraliza o card se necessário */
 }
 
 .livro-card .card-body {
-  overflow-y: auto;     /* Rola o conteúdo verticalmente se necessário */
   padding: 16px;
+  flex-grow: 1;
+  overflow: hidden;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  height: 100%;
-}
-
-.livro-card:hover {
-  box-shadow: 0 4px 12px rgba(0,0,0,0.2);
 }
 
 .livro-card .card-title {
-  font-family: 'Georgia', serif;
-  font-size: 1.5rem;
+  font-size: 1.25rem;
+  font-weight: bold;
   color: #3e2723;
-}
-
-.livro-card h4 {
-  color: #2e7d32;
-  margin-top: 10px;
 }
 
 .livro-card .card-text {
   font-size: 0.95rem;
-  margin-bottom: 10px;
+  margin-bottom: 8px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .livro-card .btn {
   border-radius: 20px;
-  padding: 5px 15px;
+  padding: 5px 12px;
+}
+
+/* Tablets em diante (>= 576px) */
+@media (min-width: 576px) {
+  .livro-card {
+    width: 50em;
+  }
+}
+
+/* Telas extra grandes (>= 1200px) */
+@media (min-width: 1200px) {
+  .livro-card {
+    width: 100em;
+  }
 }

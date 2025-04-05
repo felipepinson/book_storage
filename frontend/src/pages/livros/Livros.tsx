@@ -58,7 +58,7 @@ const Livros = () => {
     };
 
     return (
-        <div className="container d-flex flex-column align-items-center justify-content-tops min-vh-100, min-vw-100 text-center" style={{ backgroundColor: "#f8f9fa" }}>
+        <div className="container d-flex flex-column align-items-center justify-content-tops min-vh-100, min-vw-100 text-center">
             <div className="row justify-content-center align-items-center">
                 <h1>Lista de Livros</h1>
                 <div className="my-3">
@@ -87,11 +87,13 @@ const Livros = () => {
                         <div className="card livro-card shadow-sm">
                             <div className="card-body">
                                 <h5 className="card-title">{livro.titulo}</h5>
+                                <h6>Edição: {livro.edicao}</h6>
                                 <h4>{formatarPreco(livro.preco)}</h4>
                                 <p className="card-text">
                                     <strong>Autores:</strong><br />
                                     <span className="fst-italic">{livro.autores.map(autor => autor.nome).join(', ')}</span>
                                 </p>
+                                <h6><strong>Editora:</strong><br /> {livro.editora} <br /> {livro.anoPublicacao}</h6>
                                 <p className="card-text">
                                     <strong>Assuntos    :</strong><br />
                                     <span className="fst-italic">{livro.assuntos.map(assunto => assunto.descricao).join(', ')}</span>
