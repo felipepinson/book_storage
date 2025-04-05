@@ -26,9 +26,6 @@ bin/console doctrine:database:create --if-not-exists
 bin/console doctrine:migrations:migrate --no-interaction
 echo 'Migrations finished'
 
-echo 'load initial Fake data'
-bin/console doctrine:fixtures:load --no-interaction
-
 echo 'tests Fixtures and running tests'
 bin/console doctrine:database:create --if-not-exists --env=test
 bin/console doctrine:schema:update --env=test --force
