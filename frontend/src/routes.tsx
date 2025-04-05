@@ -1,6 +1,6 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import Livros from "./pages/Livros";
-import LivroCadastro from "./pages/LivroCadastro";
+import Livros from "./pages/livros/Livros";
+import LivroCadastro from "./pages/livros/LivroCadastro";
 import AutorCadastro from "./pages/autores/AutorCadastro";
 import AssuntoCadastro from "./pages/assuntos/AssuntoCadastro";
 import NotFound from "./pages/NotFound";

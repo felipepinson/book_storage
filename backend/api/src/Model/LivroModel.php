@@ -119,7 +119,7 @@ class LivroModel extends AbstractModel
 
                 $livro->addAssunto($assunto);
             }
-        } 
+        }
 
         $this->persistAndFlush($livro);
 

@@ -1,11 +1,19 @@
 .livro-card {
-  position: relative;
-  background: #fefcf9;
-  border-left: 10px solid #8B4513; /* Capa de livro à esquerda */
-  border-radius: 8px;
-  padding: 20px;
-  margin-bottom: 20px;
-  transition: box-shadow 0.3s;
+  width: 100em;       /* Largura fixa */
+  height: 350px;      /* Altura fixa */
+  overflow: hidden;   /* Oculta qualquer conteúdo que ultrapassar */
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.livro-card .card-body {
+  overflow-y: auto;     /* Rola o conteúdo verticalmente se necessário */
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 100%;
 }
 
 .livro-card:hover {
@@ -31,22 +39,4 @@
 .livro-card .btn {
   border-radius: 20px;
   padding: 5px 15px;
-}
-
-.livro-card::before {
-  content: '';
-  position: absolute;
-  left: -10px;
-  top: 0;
-  bottom: 0;
-  width: 8px;
-  background: repeating-linear-gradient(
-    90deg,
-    #5d4037,
-    #5d4037 1px,
-    transparent 1px,
-    transparent 2px
-  );
-  border-top-left-radius: 8px;
-  border-bottom-left-radius: 8px;
 }

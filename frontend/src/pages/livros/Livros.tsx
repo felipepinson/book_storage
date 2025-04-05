@@ -1,10 +1,10 @@
 import { useEffect, useState } from 'react';
-import api, { BASE_URL } from '../services/api';
+import api, { BASE_URL } from '../../services/api';
 import { Modal, Button } from "react-bootstrap";
 import LivroCadastro from "./LivroCadastro";
-import AutorCadastro from "./autores/AutorCadastro";
-import AssuntoCadastro from "./assuntos/AssuntoCadastro";
-import '../assets/styles/livros.css'
+import AutorCadastro from "../autores/AutorCadastro";
+import AssuntoCadastro from "../assuntos/AssuntoCadastro";
+import '../../assets/styles/livros.css'
 
 const Livros = () => {
     const [livros, setLivros] = useState([]);

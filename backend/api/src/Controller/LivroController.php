@@ -11,7 +11,6 @@ use Symfony\Component\Serializer\SerializerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 
 class LivroController extends AbstractController
 {
@@ -69,11 +68,31 @@ class LivroController extends AbstractController
 
     public function atualizar(Request $request, LivroModel $model, int $id): JsonResponse
     {
-        $livro = $model->atualizarLivro($id, $request->toArray());
+        try {
+            $livro = $model->atualizarLivro($id, $request->toArray());
 
-        $json = $this->serializer->serialize($livro, 'json', ['groups' => 'livro']);
+            $json = $this->serializer->serialize($livro, 'json', ['groups' => 'livro']);
 
-        return new JsonResponse($json, JsonResponse::HTTP_OK, [], true);
+            return new JsonResponse($json, JsonResponse::HTTP_OK, [], true);
+        } catch (EntityNotFoundException $e) {
+            return new JsonResponse(['error' => $e->getMessage()], JsonResponse::HTTP_NOT_FOUND);
+
+        } catch (UniqueConstraintViolationException $e) {
+            return new JsonResponse(['error' => 'Esse livro já existe no sistema.'], JsonResponse::HTTP_CONFLICT);
+
+        } catch (\InvalidArgumentException $e) {
+            return new JsonResponse(['error' => $e->getMessage()], JsonResponse::HTTP_BAD_REQUEST);
+
+        } catch (DBALException $e) {
+            if (strpos($e->getMessage(), 'Unique violation') !== false) {
+                return new JsonResponse(['error' => 'Esse livro já foi cadastrado no sistema para esse autor'], JsonResponse::HTTP_CONFLICT);
+            }
+
+            return new JsonResponse(['error' => $e->getMessage()], JsonResponse::HTTP_INTERNAL_SERVER_ERROR);
+
+        } catch (\Exception $e) {
+            return new JsonResponse(['error' => $e->getMessage()], JsonResponse::HTTP_INTERNAL_SERVER_ERROR);
+        }
     }
 
     public function remover(LivroModel $model, int $id): JsonResponse

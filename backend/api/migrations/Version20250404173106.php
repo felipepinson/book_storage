@@ -14,7 +14,7 @@ final class Version20250404173106 extends AbstractMigration
 {
     public function getDescription(): string
     {
-        return '';
+        return 'Restringir cadastro de livro para autor, garantindo que não sejam cadastrados com dupliciades';
     }
 
     public function up(Schema $schema): void
@@ -36,7 +36,7 @@ final class Version20250404173106 extends AbstractMigration
                 AND la.autor_codAu = NEW.autor_codAu;
 
                 IF livro_existente > 0 THEN
-                    SIGNAL SQLSTATE '45000'
+                    SIGNAL SQLSTATE '23505'
                     SET MESSAGE_TEXT = 'Este livro já foi cadastrado para esse autor!';
                 END IF;
             END;

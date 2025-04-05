@@ -14,7 +14,7 @@ final class Version20250404015508 extends AbstractMigration
 {
     public function getDescription(): string
     {
-        return '';
+        return 'Para gerar relatório de livros, autores e assuntos';
     }
 
     public function up(Schema $schema): void
