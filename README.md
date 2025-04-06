@@ -41,10 +41,10 @@ Acesso o diretorio clonado
 cd book_storage
 ```
 
-Va até o diretorio `backend`
+Va até o diretorio `backend/api`
 
 ```
-cd book_storage/backend
+cd book_storage/backend/api
 ```
 
 Duplique o arquivo `.env.dist` e renomeie para `.env`
